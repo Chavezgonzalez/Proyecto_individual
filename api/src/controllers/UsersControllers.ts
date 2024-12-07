@@ -32,31 +32,32 @@ export default{
                 return;
             }
         },
-        signIn:async (req: Request, res: Response)=>{
-            try{
-                //Obtener datos
-                const email = req.body.email;
-                const password = req.body.password;
+        
+    signIn:async (req: Request, res: Response)=>{
+        try{
+            //Obtener datos
+            const email = req.body.email;
+            const password = req.body.password;
 
-                //Buscar al usuario por su correo y contraseña
-                const user = await UserModel.findOne({
-                    email,
-                    password
-                });
+            //Buscar al usuario por su correo y contraseña
+            const user = await UserModel.findOne({
+                email,
+                password
+            });
 
-                //Validar que el usuario existe 
-                if(!user){
-                    res.status(400).json({msg:"No se creo usuario con esas credenciales."})
-                    return;
-                }
-
-                res.status(200).json({msg:"El usuario inicio sesion correctamente", user})
-                return;
-
-            } catch (error){
-                console.log("El error ocurrido", error)
-                res.status(500).json({msg:"Ocurrio un error al iniciar sesion"})
+            //Validar que el usuario existe 
+            if(!user){
+                res.status(400).json({msg:"No se creo usuario con esas credenciales."})
                 return;
             }
+
+            res.status(200).json({msg:"El usuario inicio sesion correctamente", user})
+            return;
+
+        } catch (error){
+            console.log("El error ocurrido", error)
+            res.status(500).json({msg:"Ocurrio un error al iniciar sesion"})
+            return;
         }
     }
+}

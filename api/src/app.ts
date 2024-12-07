@@ -15,4 +15,7 @@ app.get("/",(_req:Request,res:Response)=>{
 //Rutas de usuario
 app.post("/user/create", UsersController.signUp);
 app.post("/user/sign-in", UsersController.signIn);
+app.post("/login", UsersController.signIn);
+
+
 export default app;
