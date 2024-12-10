@@ -1,5 +1,3 @@
-// TaskController.ts
-
 import { Request, Response } from 'express';
 import { TaskModel } from '../models/TaskModule';
 
@@ -35,9 +33,8 @@ export default {
       const { id } = req.params;
       const { title, description, dateEnd, status } = req.body;
 
-      const task = await TaskModel.findById(id);
-      if (!task) {
-        return res.status(404).json({ msg: "Tarea no encontrada" });
+      if (!title || !description || !dateEnd || !status) {
+        return res.status(400).json({ msg: "Faltan datos para actualizar la tarea" });
       }
 
       const updatedTask = await TaskModel.findByIdAndUpdate(
@@ -45,6 +42,10 @@ export default {
         { title, description, dateEnd, status },
         { new: true }
       );
+
+      if (!updatedTask) {
+        return res.status(404).json({ msg: "Tarea no encontrada" });
+      }
 
       res.status(200).json({ msg: "Tarea actualizada con éxito", updatedTask });
     } catch (error) {
@@ -57,12 +58,11 @@ export default {
     try {
       const { id } = req.params;
 
-      const task = await TaskModel.findById(id);
+      const task = await TaskModel.findByIdAndDelete(id);
       if (!task) {
         return res.status(404).json({ msg: "Tarea no encontrada" });
       }
 
-      await TaskModel.findByIdAndDelete(id);
       res.status(200).json({ msg: "Tarea eliminada con éxito" });
     } catch (error) {
       console.error("Error en delete:", error);
@@ -70,14 +70,13 @@ export default {
     }
   },
 
-  // Nueva ruta para contar las tareas
   countTasks: async (_req: Request, res: Response) => {
     try {
-      const taskCount = await TaskModel.countDocuments(); // Cuenta todos los documentos de tarea
+      const taskCount = await TaskModel.countDocuments();
       res.status(200).json({ count: taskCount });
     } catch (error) {
       console.error("Error al contar tareas:", error);
       res.status(500).json({ msg: "Error al obtener la cantidad de tareas" });
     }
-  }
+  },
 };

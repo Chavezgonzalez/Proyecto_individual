@@ -23,7 +23,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
-      <h2>Dashboard</h2>
+      <h2>Administrador</h2>
       <p>Usuarios registrados: {userCount}</p>
       <p>Tareas creadas: {taskCount}</p>
     </div>
