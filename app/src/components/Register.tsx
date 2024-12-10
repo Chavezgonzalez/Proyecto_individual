@@ -1,53 +1,50 @@
-import axios from "axios";
+import React, { useState, ChangeEvent } from "react";
 import { Button, Card, Container, Form } from "react-bootstrap";
-import { useState, ChangeEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
-
-// Define el tipo del estado
-interface LoginData {
+interface RegisterData {
+  name: string;
   email: string;
   password: string;
 }
 
-export const Login = () => {
-  const [data, setData] = useState<LoginData>({ email: "", password: "" }); // Estado inicial tipado
+const Register: React.FC = () => {
+  const [data, setData] = useState<RegisterData>({ name: "", email: "", password: "" });
   const navigate = useNavigate();
 
-  // Manejar cambios en los inputs
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setData({
       ...data,
-      [e.target.name]: e.target.value, // Actualiza solo el campo modificado
+      [e.target.name]: e.target.value,
     });
   };
 
-  // Manejar el envío del formulario
   const onSubmit = async () => {
     try {
-      const res = await axios.post("http://localhost:4000/login", data); // Envía los datos al backend
-      if (res.data.user.rol === "administrador") {
-        navigate("/dashboard");
-      } else {
-        navigate("/tasks"); // Ruta para usuarios normales
-      }
+      await axios.post("http://localhost:4000/register", data);
+      alert("Usuario registrado exitosamente");
+      navigate("/");
     } catch (error) {
-      alert("Hubo un error al iniciar sesión");
+      alert("Hubo un error al registrar el usuario");
     }
   };
 
   return (
     <Container>
-      <Card
-        style={{
-          width: "25rem",
-          margin: "auto",
-        }}
-        className="text-center mt-3"
-      >
+      <Card style={{ width: "25rem", margin: "auto" }} className="text-center mt-3">
         <Card.Body>
-          <Card.Title>Inicia sesión</Card.Title>
+          <Card.Title>Regístrate</Card.Title>
           <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Nombre:</Form.Label>
+              <Form.Control
+                type="text"
+                name="name"
+                placeholder="Ingresa tu nombre"
+                onChange={onChange}
+              />
+            </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Correo:</Form.Label>
               <Form.Control
@@ -68,10 +65,12 @@ export const Login = () => {
             </Form.Group>
           </Form>
           <Button variant="primary" onClick={onSubmit}>
-            Enviar
+            Registrarme
           </Button>
         </Card.Body>
       </Card>
     </Container>
   );
 };
+
+export default Register;

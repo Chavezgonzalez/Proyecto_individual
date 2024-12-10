@@ -9,7 +9,7 @@ export default{
                 const name = req.body.name;
                 const password = req.body.password;
                 const email = req.body.email;
-                const rol = req.body.rol;
+                const rol = "usuario";
 
                 //Validar que la informacion existe
                 if (!name || !password || !email || !rol){
