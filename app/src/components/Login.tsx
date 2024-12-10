@@ -3,33 +3,34 @@ import { Button, Card, Container, Form } from "react-bootstrap";
 import { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
-
-// Define el tipo del estado
 interface LoginData {
   email: string;
   password: string;
 }
 
 export const Login = () => {
-  const [data, setData] = useState<LoginData>({ email: "", password: "" }); // Estado inicial tipado
+  const [data, setData] = useState<LoginData>({ email: "", password: "" });
   const navigate = useNavigate();
 
-  // Manejar cambios en los inputs
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setData({
       ...data,
-      [e.target.name]: e.target.value, // Actualiza solo el campo modificado
+      [e.target.name]: e.target.value,
     });
   };
 
-  // Manejar el envío del formulario
   const onSubmit = async () => {
     try {
-      const res = await axios.post("http://localhost:4000/login", data); // Envía los datos al backend
+      const res = await axios.post("http://localhost:4000/login", data);
+      const token = res.data.token; // Obtener el token de la respuesta
+
+      // Guardar el token en localStorage
+      localStorage.setItem('authToken', token);
+
       if (res.data.user.rol === "administrador") {
         navigate("/dashboard");
       } else {
-        navigate("/tasks"); // Ruta para usuarios normales
+        navigate("/tasks");
       }
     } catch (error) {
       alert("Hubo un error al iniciar sesión");
